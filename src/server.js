@@ -37,19 +37,53 @@ if (process.env.NODE_ENV === 'development') {
 
 // Ruta de bienvenida
 app.get('/', (req, res) => {
-  res.json({
+  const serverInfo = {
     success: true,
     mensaje: '🏥 API Sistema de Gestión de Citas Médicas - ESFTEC',
     version: '1.0.0',
-    entorno: process.env.NODE_ENV,
-    baseDatos: process.env.MONGODB_URI.includes('localhost') ? 'MongoDB Local' : 'MongoDB Atlas',
+    entorno: process.env.NODE_ENV || 'development',
+    baseDatos: process.env.MONGODB_URI?.includes('localhost') ? 'MongoDB Local' : 'MongoDB Atlas',
+    servidor: {
+      puerto: process.env.PORT || 5000,
+      uptime: `${Math.floor(process.uptime())}s`,
+      timestamp: new Date().toISOString(),
+      nodeVersion: process.version
+    },
     endpoints: {
-      auth: '/api/auth',
-      especialidades: '/api/especialidades',
-      pacientes: '/api/pacientes',
-      citas: '/api/citas'
+      auth: {
+        ruta: '/api/auth',
+        metodos: ['POST /login', 'POST /registro', 'GET /me'],
+        descripcion: 'Autenticación y gestión de usuarios'
+      },
+      especialidades: {
+        ruta: '/api/especialidades',
+        metodos: ['GET /', 'GET /:id', 'POST /', 'PUT /:id', 'DELETE /:id'],
+        descripcion: 'Gestión de especialidades médicas'
+      },
+      pacientes: {
+        ruta: '/api/pacientes',
+        metodos: ['GET /', 'GET /:id', 'POST /', 'PUT /:id', 'DELETE /:id'],
+        descripcion: 'Gestión de pacientes'
+      },
+      citas: {
+        ruta: '/api/citas',
+        metodos: ['GET /', 'GET /:id', 'POST /', 'PUT /:id', 'DELETE /:id'],
+        descripcion: 'Gestión de citas médicas'
+      }
+    },
+    documentacion: {
+      health: '/health',
+      formato: 'JSON',
+      autenticacion: 'Bearer Token (JWT)'
+    },
+    contacto: {
+      institucion: 'ESFTEC - Escuela Superior de Formación Técnica',
+      proyecto: 'Sistema de Gestión de Citas Médicas',
+      año: new Date().getFullYear()
     }
-  });
+  };
+
+  res.status(200).json(serverInfo);
 });
 
 // Health check
