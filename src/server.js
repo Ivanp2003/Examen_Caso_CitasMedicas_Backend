@@ -1,6 +1,4 @@
-require('dotenv').config({
-  path: `.env.${process.env.NODE_ENV || 'development'}`
-});
+require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
@@ -76,7 +74,7 @@ app.get('/', (req, res) => {
       }
     },
     database: {
-      connection: process.env.MONGODB_URI?.includes('localhost') ? 'MongoDB Local' : 'MongoDB Atlas',
+      connection: (process.env.MONGODB_URI && process.env.MONGODB_URI.includes('localhost')) ? 'MongoDB Local' : (process.env.MONGODB_URI ? 'MongoDB Atlas' : 'No configurado'),
       environment: process.env.NODE_ENV || 'development'
     },
     autenticacion: {
@@ -100,7 +98,7 @@ app.get('/health', (req, res) => {
     mensaje: 'Servidor saludable',
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
-    database: process.env.MONGODB_URI.includes('localhost') ? 'Local' : 'Atlas'
+    database: (process.env.MONGODB_URI && process.env.MONGODB_URI.includes('localhost')) ? 'Local' : (process.env.MONGODB_URI ? 'Atlas' : 'No configurado')
   });
 });
 
@@ -123,7 +121,7 @@ const server = app.listen(PORT, () => {
 🚀 Servidor corriendo en puerto ${PORT}
 📡 Entorno: ${process.env.NODE_ENV}
 🌐 URL: http://localhost:${PORT}
-💾 Base de datos: ${process.env.MONGODB_URI.includes('localhost') ? 'MongoDB Local' : 'MongoDB Atlas'}
+💾 Base de datos: ${(process.env.MONGODB_URI && process.env.MONGODB_URI.includes('localhost')) ? 'MongoDB Local' : (process.env.MONGODB_URI ? 'MongoDB Atlas' : 'No configurado')}
   `);
 });
 
