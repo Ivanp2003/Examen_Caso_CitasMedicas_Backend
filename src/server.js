@@ -38,43 +38,50 @@ if (process.env.NODE_ENV === 'development') {
 // Ruta de bienvenida
 app.get('/', (req, res) => {
   const serverInfo = {
-    success: true,
     mensaje: '🏥 API Sistema de Gestión de Citas Médicas - ESFTEC',
     version: '1.0.0',
-    entorno: process.env.NODE_ENV || 'development',
-    baseDatos: process.env.MONGODB_URI?.includes('localhost') ? 'MongoDB Local' : 'MongoDB Atlas',
     servidor: {
       puerto: process.env.PORT || 5000,
       uptime: `${Math.floor(process.uptime())}s`,
       timestamp: new Date().toISOString(),
-      nodeVersion: process.version
+      nodeVersion: process.version,
+      entorno: process.env.NODE_ENV || 'development'
     },
     endpoints: {
       auth: {
-        ruta: '/api/auth',
-        metodos: ['POST /login', 'POST /registro', 'GET /me'],
-        descripcion: 'Autenticación y gestión de usuarios'
+        "POST /api/auth/registro": "Registrar nuevo usuario",
+        "POST /api/auth/login": "Iniciar sesión de usuario",
+        "GET /api/auth/me": "Obtener información del usuario actual"
       },
       especialidades: {
-        ruta: '/api/especialidades',
-        metodos: ['GET /', 'GET /:id', 'POST /', 'PUT /:id', 'DELETE /:id'],
-        descripcion: 'Gestión de especialidades médicas'
+        "GET /api/especialidades": "Listar todas las especialidades médicas",
+        "GET /api/especialidades/:id": "Obtener especialidad por ID",
+        "POST /api/especialidades": "Crear nueva especialidad médica",
+        "PUT /api/especialidades/:id": "Actualizar especialidad existente",
+        "DELETE /api/especialidades/:id": "Eliminar especialidad médica"
       },
       pacientes: {
-        ruta: '/api/pacientes',
-        metodos: ['GET /', 'GET /:id', 'POST /', 'PUT /:id', 'DELETE /:id'],
-        descripcion: 'Gestión de pacientes'
+        "GET /api/pacientes": "Listar todos los pacientes",
+        "GET /api/pacientes/:id": "Obtener paciente por ID",
+        "POST /api/pacientes": "Registrar nuevo paciente",
+        "PUT /api/pacientes/:id": "Actualizar información del paciente",
+        "DELETE /api/pacientes/:id": "Eliminar paciente del sistema"
       },
       citas: {
-        ruta: '/api/citas',
-        metodos: ['GET /', 'GET /:id', 'POST /', 'PUT /:id', 'DELETE /:id'],
-        descripcion: 'Gestión de citas médicas'
+        "GET /api/citas": "Listar todas las citas médicas",
+        "GET /api/citas/:id": "Obtener cita por ID",
+        "POST /api/citas": "Crear nueva cita médica",
+        "PUT /api/citas/:id": "Actualizar información de cita",
+        "DELETE /api/citas/:id": "Cancelar/eliminar cita médica"
       }
     },
-    documentacion: {
-      health: '/health',
-      formato: 'JSON',
-      autenticacion: 'Bearer Token (JWT)'
+    database: {
+      connection: process.env.MONGODB_URI?.includes('localhost') ? 'MongoDB Local' : 'MongoDB Atlas',
+      environment: process.env.NODE_ENV || 'development'
+    },
+    autenticacion: {
+      tipo: 'Bearer Token (JWT)',
+      header: 'Authorization: Bearer <token>'
     },
     contacto: {
       institucion: 'ESFTEC - Escuela Superior de Formación Técnica',
