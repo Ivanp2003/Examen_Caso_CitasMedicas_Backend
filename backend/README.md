@@ -87,4 +87,5 @@ Password: admin123
 Todas las rutas excepto `/api/auth/*` requieren token JWT:
 ```
 Authorization: Bearer {token}
+
 ```
